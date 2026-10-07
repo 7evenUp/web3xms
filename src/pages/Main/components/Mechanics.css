@@ -1,0 +1,35 @@
+
+@media (min-width: 640px) {
+  
+  .clip-path-02 {
+    clip-path: polygon(0 0, 100% 0, 93.5% 100%, 8% 100%);
+  }
+
+  .clip-path-04 {
+  clip-path: polygon(0 0, 89% 0, 100% 100%, 0 100%);
+}
+}
+
+.clip-path-btn {
+  clip-path: polygon(0 0, 94% 16%, 100% 83%, 0 100%);
+}
+
+.shake:hover {
+  animation: shake 1s ease-in-out both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-0.5px) translateY(1px);
+   }
+  20%, 80% {
+    transform: translateX(1px) translateY(-0.5px);
+  }
+  30%, 50%, 70% {
+    transform: translateX(-2px) translateY(1.5px);
+  }
+  40%, 60% {
+    transform: translateX(2px) translateY(-1px);
+  }
+}
+

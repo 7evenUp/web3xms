@@ -1,0 +1,18 @@
+.castle-bg {
+  background-image: url("/images/castle_bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 90% -80px;
+}
+
+@media (min-width: 480px) {
+  .castle-bg {
+    background-position: 90% bottom;
+  }
+}
+
+@media (min-width: 640px) {
+  .castle-bg {
+    background-position: 50% bottom;
+  }
+}

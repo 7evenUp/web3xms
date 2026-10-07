@@ -1,0 +1,27 @@
+.intro-progression {
+  animation: progression-small 15s linear infinite;
+}
+
+@media (min-width: 1536px) {
+  .intro-progression {
+    animation: progression 15s linear infinite;
+  }
+}
+
+@keyframes progression {
+  from {
+    width: 0;
+  }
+  to {
+    width: 42px;
+  }
+}
+
+@keyframes progression-small {
+  from {
+    width: 0;
+  }
+  to {
+    width: 30px;
+  }
+}

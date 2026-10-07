@@ -1,0 +1,39 @@
+.outside {
+  position: relative;
+  clip-path: polygon(0% 18%, 100% 0, 99% 100%, 1.16% 100%);
+  cursor: pointer;
+}
+
+.inside {
+  user-select: none;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  padding-top: 8px;
+  clip-path: polygon(0% 18%, 100% 0, 99% 100%, 1.16% 100%);
+}
+
+@media (min-width: 1536px) {
+  .inside {
+    padding-top: 18px;
+  }
+}
+
+.AccordionItem {
+  margin-bottom: 12px;
+}
+
+.AccordionItem:nth-child(even) {
+  margin-bottom: 0;
+}
+
+.AccordionItem:nth-child(even) .outside {
+  clip-path: polygon(0.87% 0%, 98.73% 0, 100% 82.6%, 0% 100%);
+}
+
+.AccordionItem:nth-child(even) .inside {
+  clip-path: polygon(0.87% 0%, 98.73% 0, 100% 82.6%, 0% 100%);
+  padding-top: 0px;
+}

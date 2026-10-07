@@ -1,0 +1,24 @@
+.quest-space-bg {
+  background-image: url("/images/quest-space-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: calc(100vh - 30px);
+}
+
+.outer-circle {
+  stroke-dasharray: 804px;
+  stroke-dashoffset: 0px;
+  stroke-linecap: round;
+  stroke-width: 3px;
+  stroke: white;
+  fill: none;
+}
+
+.inner-circle {
+  stroke-dasharray: 804px;
+  stroke-dashoffset: 0px;
+  stroke-linecap: round;
+  stroke-width: 3px;
+  fill: none;
+  rotate: -90deg;
+}
