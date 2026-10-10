@@ -17,7 +17,7 @@ const AudioButton = () => {
 
   const onSoundClick = () => {
     if (!isPlaying) {
-      song.play()
+      void song.play().catch(() => {})
       dispath(soundOn())
     } else {
       song.pause()
@@ -27,7 +27,7 @@ const AudioButton = () => {
 
   useEffect(() => {
     if (isPlaying) {
-      song.play()
+      void song.play().catch(() => {})
     } else {
       song.pause()
     }
@@ -37,7 +37,7 @@ const AudioButton = () => {
     const clickHandler = () => {
       try {
         if (isPlaying) {
-          song.play()
+          void song.play().catch(() => {})
         }
       } catch (error) {
         console.log("Not able to play song because of the error: ", error)
@@ -45,7 +45,8 @@ const AudioButton = () => {
     }
 
     document.addEventListener("click", clickHandler, { once: true })
-  }, [])
+    return () => document.removeEventListener("click", clickHandler)
+  }, [isPlaying])
 
   return (
     <>

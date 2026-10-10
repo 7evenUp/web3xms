@@ -1,35 +1,8 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-
-import { RootState } from "../store"
-
-const PUBLIC_ENDPOINTS = [
-  "getIdToken",
-  "obtain",
-  "refresh",
-  "mainPage",
-  "sponsors",
-]
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { demoBaseQuery } from "@/demo/api"
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/",
-    credentials: "include",
-    prepareHeaders: (headers, { getState, endpoint }) => {
-      if (PUBLIC_ENDPOINTS.includes(endpoint)) {
-        return headers
-      }
-
-      const token = (getState() as RootState).authTokens.accessToken
-
-      if (token) {
-        headers.set("Authorization", token)
-      }
-
-      return headers
-    },
-  }),
-  // refetchOnFocus: true,
-  refetchOnReconnect: true,
-  tagTypes: ["Profile", "Inventory"],
+  baseQuery: demoBaseQuery,
+  tagTypes: ["Profile", "Inventory", "Journey"],
   endpoints: () => ({}),
 })

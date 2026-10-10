@@ -30,7 +30,7 @@ const Notes = () => {
     return <NotAvailable />
   }
 
-  if (parseInt(episode) > currentChapter.stories.length) {
+  if (!/^\d+$/.test(episode) || parseInt(episode) < 1 || parseInt(episode) > currentChapter.stories.length) {
     return <NotAvailable />
   }
 

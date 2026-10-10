@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Howl } from "howler"
 import { Pause, Play, Xmark } from "iconoir-react"
 
+import DemoNotice from "@/components/DemoNotice"
 import Header from "@/components/Header"
 import ScrollToTop from "@/components/ScrollToTop"
 import { useSoundContext } from "@/components/SoundProvider"
@@ -30,11 +32,12 @@ const Root = () => {
     if (pathname === "/quest") {
       navigate("/quest/phase-1" + search, { replace: true })
     }
-  }, [pathname])
+  }, [pathname, search, navigate])
 
   return (
     <ScrollToTop>
       <Header />
+      <DemoNotice />
       <main className="w-full flex flex-col justify-center">
         <Outlet />
 
@@ -52,64 +55,22 @@ const FloatingSoundPlayer = () => {
 
   const { soundSrc, setSoundSrc } = useSoundContext()
 
-  const handleLoad = function () {
-    if (typeof onload === "function") {
-      // @ts-expect-error asdasd
-      onload.call(this)
-    }
-    // @ts-expect-error asdasd
-    setDuration(this.duration())
+  useEffect(() => {
+    setDuration(null)
     setTimePassed(0)
-  }
-
-  useEffect(() => {
     const newHowl = new Howl({
-      src: soundSrc,
-      html5: true,
-      volume: 0.7,
-      preload: "metadata",
-      onload: handleLoad,
-      autoplay: true,
+      src: soundSrc, html5: true, volume: 0.7, preload: "metadata", autoplay: true,
+      onload: () => { setDuration(newHowl.duration()); setIsPlaying(true) },
+      onend: () => setSoundSrc(""),
     })
-
     setHowl(newHowl)
-    setIsPlaying(true)
-
-    return () => {
-      newHowl.unload()
-    }
-  }, [soundSrc])
-
+    return () => { newHowl.unload() }
+  }, [soundSrc, setSoundSrc])
   useEffect(() => {
-    if (!howl) return
-
-    const intervalId = setInterval(() => {
-      if (howl.state() === "loading") {
-        setIsPlaying(false)
-      }
-      if (howl.state() === "loaded") {
-        setIsPlaying(true)
-      }
-    }, 1000)
-
-    return () => clearInterval(intervalId)
-  }, [])
-
-  useEffect(() => {
-    if (!howl) return
-
-    if (isPlaying && duration && timePassed !== null) {
-      const intervalId = setInterval(function () {
-        if (timePassed >= duration) {
-          howl?.unload()
-          setSoundSrc("")
-        } else {
-          setTimePassed(timePassed + 1)
-        }
-      }, 1000)
-      return () => clearInterval(intervalId)
-    }
-  }, [timePassed, isPlaying, duration])
+    if (!howl || !isPlaying) return
+    const interval = setInterval(() => setTimePassed(Number(howl.seek()) || 0), 250)
+    return () => clearInterval(interval)
+  }, [howl, isPlaying])
 
   const onButtonClick = () => {
     if (howl?.playing()) {
@@ -130,7 +91,7 @@ const FloatingSoundPlayer = () => {
 
   return (
     <div className="group fixed flex items-center gap-3 pl-2 pr-2 z-[9999] bottom-0 right-0 sm:bottom-auto sm:right-7 sm:top-24 md:right-9 2xl:top-28 2xl:right-10 w-screen sm:w-[320px] 2xl:w-[360px] 3xl:w-[420px] sm:rounded-lg py-2 phone:py-3 sm:py-2 2xl:py-2 bg-gray text-white animate-in fade-in-50 slide-in-from-right-10 shadow-sm shadow-black/20">
-      <button onClick={onButtonClick}>
+      <button aria-label={isPlaying ? "Пауза аудио" : "Продолжить аудио"} onClick={onButtonClick}>
         {isPlaying ? (
           <Pause className="hover:fill-white 3xl:w-7 3xl:h-7" />
         ) : (
@@ -170,6 +131,7 @@ const FloatingSoundPlayer = () => {
         </div>
       </div>
       <button
+        aria-label="Закрыть аудиоплеер"
         className="rounded-md hover:bg-blue/30 border border-blue/30 ml-auto z-[10000]"
         onClick={onCloseClick}
       >

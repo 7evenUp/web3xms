@@ -9,16 +9,14 @@ import FormDialog from "./FormDialog"
 
 import { useInventoryQuery } from "@/redux/api/inventory"
 import { useProfileQuery } from "@/redux/api/profile"
-import { useCheckIdTokenQuery } from "@/redux/api/auth"
 
 import { cn } from "@/lib/cn"
 
 const Inventory = () => {
   const { data } = useInventoryQuery()
   const { isSuccess: isProfileSuccess } = useProfileQuery()
-  const { isSuccess: isTokenSuccess } = useCheckIdTokenQuery()
 
-  if (!data) return <BlankPage />
+  if (!data) return <BlankPage isLoading />
 
   if (data.items_count <= 0) {
     return <BlankPage />
@@ -30,7 +28,7 @@ const Inventory = () => {
         <Profile />
         <Heading />
 
-        {isProfileSuccess && isTokenSuccess && <FormDialog />}
+        {isProfileSuccess && <FormDialog />}
 
         <div className="flex justify-center flex-wrap gap-5 w-[80vw] small-phone:w-[70vw] phone:w-[80vw] 2xl:w-[1330px] mt-6 mb-16">
           {data.items.map((prize) => (
@@ -57,9 +55,8 @@ const Inventory = () => {
 
 export default Inventory
 
-const BlankPage = () => {
+const BlankPage = ({ isLoading = false }: { isLoading?: boolean }) => {
   const { isSuccess: isProfileSuccess } = useProfileQuery()
-  const { isSuccess: isTokenSuccess } = useCheckIdTokenQuery()
   
   return (
     <section className="bg-black p-2.5 2xl:p-[15px] overflow-hidden">
@@ -68,14 +65,14 @@ const BlankPage = () => {
 
         <Heading />
 
-        {isProfileSuccess && isTokenSuccess && <FormDialog />}
+        {isProfileSuccess && <FormDialog />}
 
         <div className="flex flex-col gap-1 xl:gap-2 2xl:gap-3 3xl:gap-4 mt-8 sm:mt-10 xl:mt-12 2xl:mt-14 3xl:mt-16">
           <h2 className="font-circe-bold text-xl/none sm:text-2xl/none 2xl:text-3xl/none 3xl:text-4xl/none tracking-[0.02em] text-white/80 text-center">
-            Пока что у Вас нет призов
+            {isLoading ? "Загружаем инвентарь…" : "Пока что у Вас нет призов"}
           </h2>
           <p className="max-w-prose font-circe-regular text-sm sm:text-base 2xl:text-xl text-white">
-            Вы можете получить их, открыв один из боксов
+            {isLoading ? "Твои демо-награды скоро появятся здесь" : "Вы можете получить их, открыв один из боксов"}
           </p>
         </div>
 
@@ -92,8 +89,7 @@ const Heading = ({ className }: { className?: string }) => (
       className
     )}
   >
-    Здесь хранятся выигранные в заданиях вещи. Используй свой уникальный подход
-    в активации каждого из призов
+    Здесь хранятся твои демо-награды. Открывай кейсы и активируй подарки.
   </h1>
 )
 

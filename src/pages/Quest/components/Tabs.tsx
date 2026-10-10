@@ -3,9 +3,9 @@ import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/cn"
 
 const data = [
-  { link: "/quest/phase-1", title: "Вступление", date: "11-15.12" },
-  { link: "/quest/phase-2", title: "Задания", date: "15-24.12" },
-  { link: "/quest/phase-3", title: "Кейсы", date: "22-24.12" },
+  { link: "/quest/phase-1", title: "Вступление", date: "Демо" },
+  { link: "/quest/phase-2", title: "Задания", date: "Все открыты" },
+  { link: "/quest/phase-3", title: "Кейсы", date: "40 XP" },
 ]
 
 const Tabs = () => {

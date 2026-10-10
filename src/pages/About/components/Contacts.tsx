@@ -52,8 +52,8 @@ const Contacts = () => {
 
     document.addEventListener("mousemove", handleMouse)
 
-    return () => document.removeEventListener("mousedown", handleMouse)
-  }, [])
+    return () => document.removeEventListener("mousemove", handleMouse)
+  }, [x, y])
 
   return (
     <motion.section

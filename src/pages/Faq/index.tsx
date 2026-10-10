@@ -28,12 +28,10 @@ const Faq = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, type: "tween", duration: 0.4 }}
           >
-            Если вы не нашли ответ на свой вопрос, свяжитесь с нашей службой
-            поддержки
+            Исследуй демо: выполняй задания, получай XP и открывай кейсы с виртуальными подарками
           </motion.p>
           <motion.a
-            href="https://t.me/HelpXMAS2"
-            target="_blank"
+            href="/quest/phase-3"
             className="flex items-center relative group w-[190px] h-[42px] 2xl:w-[220px] 2xl:h-[50px] 3xl:w-[260px] 3xl:h-[57px] font-docker-one text-sm/none 2xl:text-base/none 3xl:text-lg/none tracking-[0.2em] transition-color [clip-path:polygon(0_0,94%_16%,100%_83%,0_100%)] text-red bg-red hover:text-yellow mt-6 mb-3 2xl:mt-8 3xl:mt-10 3xl:mb-5"
             initial={{ opacity: 0, y: 200 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,11 +40,11 @@ const Faq = () => {
             <div className="absolute inset-[3px] transition-colors bg-yellow group-hover:bg-red [clip-path:polygon(0_0,94%_16%,100%_83%,0_100%)]" />
             <div className="relative z-10 flex items-center gap-1.5 ml-4 3xl:gap-3.5 3xl:ml-6">
               <TgIcon className="w-6 h-6 3xl:w-[28px] 3xl:h-[28px]" />
-              Telegram
+              К кейсам
             </div>
           </motion.a>
           <motion.a
-            href="mailto:help@crypton.xyz"
+            href="/quest/phase-2"
             className="flex items-center relative group w-[190px] h-[42px] 2xl:w-[220px] 2xl:h-[50px] 3xl:w-[260px] 3xl:h-[57px] font-docker-one text-sm/none 2xl:text-base/none 3xl:text-lg/none tracking-[0.2em] transition-color [clip-path:polygon(0_0,94%_16%,100%_83%,0_100%)] text-red bg-red hover:text-yellow"
             initial={{ opacity: 0, y: 200 }}
             animate={{ opacity: 1, y: 0 }}
@@ -55,7 +53,7 @@ const Faq = () => {
             <div className="absolute inset-0.5 2xl:inset-[3px] transition-colors bg-yellow group-hover:bg-red [clip-path:polygon(0_0,94%_16%,100%_83%,0_100%)]" />
             <div className="relative z-10 flex items-center gap-6 2xl:gap-8 3xl:gap-10 ml-4 3xl:ml-6">
               <MailIcon className="w-6 h-6 3xl:w-[28px] 3xl:h-[28px]" />
-              Почта
+              Задания
             </div>
           </motion.a>
         </div>

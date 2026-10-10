@@ -45,7 +45,7 @@ const Introduction = () => {
     }, 1000)
 
     return () => clearInterval(intervalId)
-  }, [timer, activeSlide])
+  }, [timer, activeSlide, controls])
 
   const onPrevClick = () => {
     if (activeSlide === 1) setActiveSlide(2)
@@ -164,7 +164,7 @@ const FirstSlide = ({ removeFromTree }: { removeFromTree: () => void }) => {
         safeToRemove()
         removeFromTree()
       }, 500)
-  }, [isPresent])
+  }, [isPresent, safeToRemove, removeFromTree])
 
   return (
     <motion.div
@@ -232,7 +232,7 @@ const SecondSlide = ({ removeFromTree }: { removeFromTree: () => void }) => {
         safeToRemove()
         removeFromTree()
       }, 500)
-  }, [isPresent])
+  }, [isPresent, safeToRemove, removeFromTree])
 
   return (
     <motion.div

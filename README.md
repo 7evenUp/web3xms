@@ -1,27 +1,49 @@
-# React + TypeScript + Vite
+# WEB3 X-MAS — демо для портфолио
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интерактивная версия старого проекта на React, TypeScript и Vite. Работает без БД, API-сервера, регистрации, авторизации, Zealy и криптокошельков. Запросы RTK Query обрабатываются локально в браузере.
 
-Currently, two official plugins are available:
+## Запуск
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Требуются Node.js и pnpm.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```sh
+pnpm install
+pnpm dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Открой http://localhost:5173. Файл .env и ключи сторонних сервисов не нужны.
+
+## Что можно попробовать
+
+- Демо-профиль с 1000 XP, бесплатное пополнение на 400 XP без ограничений.
+- Покупка и открытие Common, Rare и Legendary за 40 XP, случайные награды, оригинальная анимация и её пропуск.
+- Каталог призов с фотографиями и описаниями.
+- Инвентарь, активация NFT и промокодов без кошелька, получение демо-кодов.
+- Восемь открытых глав с иллюстрациями, двумя эпизодами и заданиями. Каждая глава даёт 80 XP один раз.
+- Демонстрационная замена повреждённой детали: восстановленная NFT появляется в инвентаре. Повтор той же операции не создаёт дубликат.
+- Главная страница, FAQ, страницы проекта и партнёров, музыка и аудиоплеер.
+- Сохранение баланса, наград и заданий после перезагрузки. Кнопка «Начать демо заново» находится в меню рядом с профилем.
+
+Все покупки и награды виртуальные. Прогресс хранится только в этом браузере в localStorage, ключ `web3xms-demo-v1`. Если хранилище недоступно, демо работает в памяти до перезагрузки.
+
+Изображения, каталог призов и анимации взяты из проекта. Оригинальные тексты историй и аудиозаписи глав отсутствуют в репозитории: для демонстрации добавлены новые тексты и задания, аудиоплеер использует имеющуюся новогоднюю музыку. Вступление использует локальный контент вместо внешнего видеоплеера. Ссылки на сайты партнёров в информационных разделах сохранены.
+
+## Проверка и сборка
+
+```sh
+pnpm test:demo
+pnpm lint
+pnpm build
+pnpm preview
+```
+
+Проверки демо покрывают списание XP, выдачу и активацию наград, защиту от повторного начисления, восстановление деталей, перезагрузку, сброс и недоступное/повреждённое хранилище. Во время проверок сетевые запросы запрещены.
+
+Готовая статическая версия находится в `dist/`. Для публикации настрой перенаправление путей приложения (например, `/quest/phase-3` и `/notes/1/1`) на `index.html`; для хостингов с поддержкой `_redirects` правило уже включено в сборку. Сервер приложений и настройки API не требуются.
+
+## Демо-данные
+
+- `src/demo/data.ts`: профиль, кейсы, призы, главы и локальные медиа.
+- `src/demo/tasks.ts`: вопросы и варианты ответов.
+- `src/demo/api.ts`: локальная обработка операций.
+- `src/demo/state.ts`: сохранение, восстановление и сброс прогресса.

@@ -57,8 +57,8 @@ const First = () => {
             transition={{ type: "tween", duration: 0.4, delay: 0.2 }}
             className="relative w-full phone:w-[300px] 2xl:w-[340px] 3xl:w-[502px] mt-1 mb-4 phone:mt-5 phone:mb-8 2xl:mb-[50px] 3xl:mb-[80px] font-circe-bold text-[12px]/[125%] phone:text-sm/[125%] 2xl:text-base/[125%] 3xl:text-xl/[125%] tracking-[0.02em] text-blue text-center"
           >
-            с 15 по 24 декабря слушай Рождественские истории, выполняй задания,
-            зарабатывай XP и открывай кейсы с подарками!
+            Исследуй демо рождественского квеста: читай истории, выполняй задания,
+            зарабатывай виртуальные XP и открывай кейсы с подарками!
           </motion.p>
           <div className="relative flex justify-around phone:justify-between w-full phone:w-[350px] 2xl:w-[460px] 3xl:w-[570px]">
             <motion.div

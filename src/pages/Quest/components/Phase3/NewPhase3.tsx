@@ -1,3 +1,6 @@
+import { useState } from "react"
+import { useRefillMutation } from "@/redux/api/profile"
+import { toast } from "sonner"
 import { Coins } from "iconoir-react"
 
 import ButtonBorderXP from "@/assets/svgs/phase-3-btn-border-xp.svg?react"
@@ -6,7 +9,6 @@ import Profile from "@/components/Profile"
 
 import Tabs from "../Tabs"
 
-// import Container, { IContainer } from "./Container"
 import Container from "./Container"
 import { prizesData } from "./prizesData"
 import PrizeItem from "./PrizeItem"
@@ -16,31 +18,13 @@ import { useGetContainersQuery } from "@/redux/api/containers"
 
 import { cn } from "@/lib/cn"
 import FormDialog from "../Inventory/FormDialog"
-import { useCheckIdTokenQuery } from "@/redux/api/auth"
 
-// const data: IContainer[] = [
-//   {
-//     imgSrc: "/containers/container-sm.png",
-//     xp: 40,
-//     rarity: "common",
-//   },
-//   {
-//     imgSrc: "/containers/container-md.png",
-//     xp: 40,
-//     rarity: "rare",
-//   },
-//   {
-//     imgSrc: "/containers/container-lg.png",
-//     xp: 40,
-//     rarity: "legendary",
-//   },
-// ]
 
 const NewPhase3 = () => {
+  const [isOpening, setIsOpening] = useState(false)
   const { data: profileData, isSuccess: isProfileSuccess } = useProfileQuery()
-  const { isSuccess: isTokenSuccess } = useCheckIdTokenQuery()
   const { data: containersData, isError, isSuccess } = useGetContainersQuery()
-  // const [refill] = useRefillMutation()
+  const [refill, { isLoading: isRefilling }] = useRefillMutation()
 
   if (isError)
     return (
@@ -64,7 +48,7 @@ const NewPhase3 = () => {
         <Tabs />
         <Profile />
 
-        {isProfileSuccess && isTokenSuccess && <FormDialog />}
+        {isProfileSuccess && <FormDialog />}
 
         {!containersData && null}
 
@@ -86,22 +70,18 @@ const NewPhase3 = () => {
               )}
             >
               <div className="w-[80vw] h-[220px] phone:w-[90vw] phone:h-[200px] lg:w-[930px] lg:h-[130px] 2xl:w-[1110px] 2xl:h-[160px] 3xl:w-[1395px] 3xl:h-[200px] flex justify-between max-lg:flex-wrap lg:gap-6 p-3 phone:pt-6 phone:pl-7 phone:pr-8 2xl:gap-8 2xl:pt-8 2xl:pl-9 2xl:pr-10 [background:linear-gradient(90deg,#88756E_0%,#9A2EA9_17.19%,#CE6713_95.31%)] font-circe-bold text-[11px]/none 2xl:text-xs/none 3xl:text-sm/none tracking-[0.02em] text-white">
-                {profileData && profileData.expBalance && (
+                {profileData && (
                   <div className="flex items-center flex-col phone:flex-row gap-3 phone:gap-6 absolute -top-24 phone:-top-16 3xl:-top-20 left-1/2 -translate-x-1/2 w-screen phone:w-[440px] lg:w-auto">
                     <h3 className="font-docker-one text-lg/none 2xl:text-xl/none 3xl:text-2xl/none flex items-center gap-3">
                       Ваш баланс: <Coins />{" "}
                       <span>{profileData.expBalance}XP</span>
                     </h3>
-                    <a
-                      href="https://zealy.io/c/web3xms/invite/zo1xuBEKo-pfk3vxeVZ7l"
-                      target="_blank"
-                      className="group relative w-[170px] h-[43px] 2xl:w-[200px] 2xl:h-[50px] 3xl:w-[232px] 3xl:h-[57px] text-white hover:text-black flex justify-center items-center"
-                    >
+                    <button disabled={isRefilling} onClick={async () => { await refill().unwrap(); toast.success("Начислено 400 демо-XP") }} className="group relative w-[170px] h-[43px] 2xl:w-[200px] 2xl:h-[50px] 3xl:w-[232px] 3xl:h-[57px] text-white hover:text-black flex justify-center items-center disabled:opacity-50">
                       <ButtonBorderXP className="w-full h-full absolute inset-0 stroke-white group-hover:fill-white" />
                       <div className="relative z-10 font-docker-one text-[10px]/none small-phone:text-xs/none 2xl:text-sm/none 3xl:text-lg/none tracking-[0.2em] flex items-center justify-center">
-                        <span>Получить XP</span>
+                        <span>+400 XP</span>
                       </div>
-                    </a>
+                    </button>
                   </div>
                 )}
                 <h2 className="font-drukCyr text-3xl/none phone:text-[54px]/none 2xl:text-[64px]/none 3xl:text-[90px]/none h-fit phone:-mt-4 max-lg:w-full">
@@ -110,18 +90,15 @@ const NewPhase3 = () => {
                 <div className="max-w-[100%] phone:max-w-[45%] lg:max-w-[280px] 2xl:max-w-[300px] 3xl:max-w-[345px]">
                   Механика открытия кейсов:
                   <ul className="list-disc ml-5 2xl:ml-6">
-                    <li>На первые 40ХР можно открыть только кейс Common</li>
-                    <li>На вторые 40ХР появляется доступ к кейсу Rare</li>
+                    <li>Каждый кейс стоит 40 демо-XP</li>
+                    <li>Все три вида кейсов доступны сразу</li>
                     <li>
-                      На все последующие 40ХР будет доступен к открытию кейс
-                      Legendary
+                      Награды сохраняются в вашем инвентаре
                     </li>
                   </ul>
                 </div>
                 <p className="max-w-[100%] phone:max-w-[45%] lg:max-w-[240px] 2xl:max-w-[260px] 3xl:max-w-[345px]">
-                  Система «Антисибилл» механики направлена на защиту участников
-                  и позволяет добросовестным пользователям получить доступ к
-                  кейсам, где % выпадения дорогостоящих подарков самый высокий.
+                  Портфолио-демо: покупайте и открывайте кейсы за виртуальные XP. Баланс можно пополнять бесплатно. Реальные платежи и выдача подарков не предусмотрены.
                 </p>
               </div>
 
@@ -142,13 +119,9 @@ const NewPhase3 = () => {
                           | "rare"
                           | "legendary"
                       }
-                      // isReady={false}
-                      isReady={
-                        !profileData
-                          ? false
-                          : container.order ===
-                            profileData.currentContainerOrderToOpen
-                      }
+                      isReady={true}
+                      isBusy={isOpening}
+                      onBusyChange={setIsOpening}
                       id={container.id}
                       prizes={sortedPrizes}
                     />

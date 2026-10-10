@@ -18,12 +18,11 @@ import Tabs from "../Tabs"
 
 import SoundPlayer from "./SoundPlayer"
 import JourneyStep from "./JourneyStep"
-import ZealyDialog from "./JourneyStep/ZealyDialog"
+import TaskDialog from "./JourneyStep/TaskDialog"
 
 import { cn } from "@/lib/cn"
 import FormDialog from "../Inventory/FormDialog"
 import { useProfileQuery } from "@/redux/api/profile"
-import { useCheckIdTokenQuery } from "@/redux/api/auth"
 
 const Phase2 = () => {
   const { search } = useLocation()
@@ -37,7 +36,6 @@ const Phase2 = () => {
     isError,
   } = useJourneyStepsQuery()
   const { isSuccess: isProfileSuccess } = useProfileQuery()
-  const { isSuccess: isTokenSuccess } = useCheckIdTokenQuery()
 
   const introStep = journeySteps?.find((el) => el.order === 0)
 
@@ -76,7 +74,7 @@ const Phase2 = () => {
         <Tabs />
         <Profile />
 
-        {isProfileSuccess && isTokenSuccess && <FormDialog />}
+        {isProfileSuccess && <FormDialog />}
 
         {isLoading && null}
 
@@ -129,7 +127,7 @@ const Phase2 = () => {
                       </div>
                     </Link> */}
 
-                    <ZealyDialog />
+                    <TaskDialog />
                   </div>
                 </motion.div>
                 <motion.div
@@ -144,9 +142,7 @@ const Phase2 = () => {
                     Привееет, <br /> искатель приключений!
                   </h2>
                   <p className="text-yellow/70 font-circe-bold text-xs/[125%] phone:text-sm/[125%] 2xl:text-base/[125%] 3xl:text-xl/[125%] tracking-[0.02em] w-[210px] phone:w-[250px] sm:w-[330px] md:w-[450px] 2xl:w-[510px] 3xl:w-[640px] mt-5">
-                    Каждый день с 15 по 22 декабря будет открываться доступ к 1
-                    из 8 глав Рождественских историй. Слушай, выполняй задания,
-                    зарабатывай XP и с 22 декабря открывай кейсы с подарками!
+                    Все восемь глав доступны сразу. Читай демо-истории, выполняй задания, получай XP и открывай кейсы с виртуальными подарками!
                   </p>
                   <img
                     src={GirlImage}
@@ -164,7 +160,7 @@ const Phase2 = () => {
               </div>
             )}
 
-            <div className="flex flex-col items-center gap-5 pb-[60px]">
+            <div className={cn("flex flex-col items-center gap-5 pb-[60px]", !introStep && "mt-[280px] lg:mt-56")}>
               {journeySteps.map((el) => {
                 const photos = el.mediaContents.filter(
                   (media) => media.mediaContent.type === "image"

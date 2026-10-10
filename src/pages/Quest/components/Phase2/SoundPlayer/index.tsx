@@ -50,7 +50,7 @@ const SoundPlayer = ({
     return () => {
       newHowl.unload()
     }
-  }, [])
+  }, [soundSrc])
 
   const onToggle = () => {
     if (bgMusicIsPlaying) {
@@ -58,7 +58,7 @@ const SoundPlayer = ({
         dispath(soundOff())
       }, 100)
     }
-    setSoundSrc(soundSrc)
+    setSoundSrc(contextSoundSrc === soundSrc ? "" : soundSrc)
   }
 
   useEffect(() => {

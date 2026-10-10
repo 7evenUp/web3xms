@@ -23,6 +23,7 @@ const containersApi = api.injectEndpoints({
       ContainerWonResponse,
       { container_id: number }
     >({
+      invalidatesTags: ["Inventory"],
       query: ({ container_id }) => ({
         url: `api/containers/${container_id}/open`,
         method: "POST",

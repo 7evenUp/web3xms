@@ -7,6 +7,8 @@ interface SoundContextData {
 
 const SoundContext = createContext<SoundContextData | null>(null)
 
+// The sound context exposes its hook alongside the provider.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSoundContext = () => {
   const data = useContext(SoundContext)
 

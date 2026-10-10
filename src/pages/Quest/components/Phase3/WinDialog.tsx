@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import * as Dialog from "@radix-ui/react-dialog"
 
 import CloseIcon from "@/assets/icons/close-dialog.svg?react"
@@ -18,9 +19,9 @@ const WinDialog = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed inset-0 backdrop-blur-sm" />
-        <Dialog.Content
-          className="data-[state=open]:animate-contentShow fixed z-50 top-[50%] left-[50%] h-[100dvh] sm:h-[240px] md:h-[280px] lg:h-[300px] 2xl:h-[360px] 3xl:h-[442px] w-screen sm:w-[500px] md:w-[600px] lg:w-[640px] 2xl:w-[760px] 3xl:w-[930px] translate-x-[-50%] translate-y-[-50%] focus:outline-none bg-white"
+        <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed z-[100] inset-0 backdrop-blur-sm" />
+        <Dialog.Content aria-describedby={undefined}
+          className="data-[state=open]:animate-contentShow fixed z-[101] top-[50%] left-[50%] h-[100dvh] sm:h-[240px] md:h-[280px] lg:h-[300px] 2xl:h-[360px] 3xl:h-[442px] w-screen sm:w-[500px] md:w-[600px] lg:w-[640px] 2xl:w-[760px] 3xl:w-[930px] translate-x-[-50%] translate-y-[-50%] focus:outline-none bg-white"
           onOpenAutoFocus={(event) => event.preventDefault()}
           onCloseAutoFocus={(event) => event.preventDefault()}
         >
@@ -29,7 +30,7 @@ const WinDialog = ({
               <div className="flex items-center justify-center pt-10 font-paperfiller text-3xl">
                 Не удалось узнать приз
               </div>
-              <Dialog.Close className="absolute right-4 top-4 sm:left-full sm:translate-x-2 md:translate-x-5 sm:top-0 text-black sm:text-white">
+              <Dialog.Close aria-label="Закрыть выигрыш" className="absolute right-4 top-4 sm:left-full sm:translate-x-2 md:translate-x-5 sm:top-0 text-black sm:text-white">
                 <CloseIcon className="w-6 h-6 sm:w-[36px] sm:h-[36px] 3xl:w-[44px] 3xl:h-[44px]" />
               </Dialog.Close>
             </>
@@ -60,7 +61,7 @@ const WinDialog = ({
                   />
                 </div>
                 <div className="flex flex-col bg-white p-3 small-phone:py-0 small-phone:px-6 sm:p-4 sm:pb-2 2xl:p-6 2xl:pb-4 3xl:p-8 3xl:pb-6">
-                  <h2
+                  <Dialog.Title
                     className={cn(
                       "font-paperfiller text-2xl/none sm:text-xl/none md:text-[28px]/none 2xl:text-4xl/none 3xl:text-5xl/none mb-1 2xl:mb-3 3xl:mb-5",
                       data.prize.rarity === "common"
@@ -77,16 +78,15 @@ const WinDialog = ({
                     )}
                   >
                     Поздравляем! Вы выиграли:
-                  </h2>
+                  </Dialog.Title>
                   <h2 className="font-drukCyr text-2xl/none sm:text-xl/none md:text-[28px]/none 2xl:text-4xl/none 3xl:text-5xl/none tracking-[0.02em] text-black mb-4 2xl:mb-6 3xl:mb-8">
                     {data.prize.title}
                   </h2>
-                  <p className="text-black max-w-[380px] sm:max-w-auto">
-                    {data.prize.description}
-                  </p>
+                  <p className="text-black max-w-[380px] sm:max-w-auto">Награда добавлена в твой демо-инвентарь.</p>
+                  <Link to="/quest/inventory" className="mt-4 text-red underline underline-offset-4" onClick={() => onOpenChange(false)}>Перейти в инвентарь</Link>
                 </div>
               </div>
-              <Dialog.Close className="absolute right-4 top-4 sm:left-full sm:translate-x-2 md:translate-x-5 sm:top-0 text-black sm:text-white">
+              <Dialog.Close aria-label="Закрыть выигрыш" className="absolute right-4 top-4 sm:left-full sm:translate-x-2 md:translate-x-5 sm:top-0 text-black sm:text-white">
                 <CloseIcon className="w-6 h-6 sm:w-[36px] sm:h-[36px] 3xl:w-[44px] 3xl:h-[44px]" />
               </Dialog.Close>
             </>

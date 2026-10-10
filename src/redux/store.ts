@@ -13,19 +13,18 @@ import {
 import storage from "redux-persist/lib/storage"
 
 import soundReducer from "./sound/slice"
-import authTokensReducer from "./authTokens/slice"
 import { api } from "./api/core"
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: [api.reducerPath, "soundPlayer"],
+  whitelist: ["sound"],
 }
 
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
-  authTokens: authTokensReducer,
+
   sound: soundReducer,
 })
 

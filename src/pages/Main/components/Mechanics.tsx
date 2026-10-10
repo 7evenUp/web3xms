@@ -71,11 +71,10 @@ const Mechanics = () => {
                 01
               </span>
               <h2 className="font-drukCyr text-[32px] 2xl:text-[44px] 3xl:text-[54px] tracking-[0.02em] text-red">
-                с 15 по 24 декабря
+                Все главы открыты
               </h2>
               <p className="font-circe-bold text-base/none 2xl:text-xl/none 3xl:text-2xl/[90%] tracking-[0.02em] max-w-[250px] 2xl:max-w-[360px] text-gray">
-                ежедневно в разделе «Квест» на сайте будет появляться по одной
-                рождественской аудиоистории
+                в разделе «Квест» доступны восемь демо-историй с иллюстрациями и заданиями
               </p>
             </div>
             <div className="relative z-10 w-full sm:w-[320px] md:w-[390px] 2xl:w-[540px] 3xl:w-[663px] sm:-ml-[50px] bg-red flex pt-8 2xl:pt-[43px] pb-[90px] lg:pb-0 pl-2 phone:pl-4 sm:pl-8 2xl:pl-[40px] 3xl:pl-[65px] clip-path-02 mb-4 lg:mb-0">
@@ -83,11 +82,10 @@ const Mechanics = () => {
                 02
               </span>
               <h2 className="font-drukCyr leading-none text-[32px] 2xl:text-[44px] 3xl:text-[54px] tracking-[0.02em] mr-4 lg:mr-6 2xl:mr-10 3xl:mr-[64px] text-white">
-                ZEALY
+                ЗАДАНИЯ
               </h2>
               <p className="font-circe-bold leading-[90%] text-base 3xl:text-[22px] tracking-[0.02em] max-w-[260px] sm:max-w-[190px] 2xl:max-w-[256px] mt-1 2xl:mt-2 text-white">
-                прослушав рассказ, отправляйся выполнять задания дня на
-                платформу Zealy
+                прочитай историю и выполни задание прямо на сайте. За правильный ответ начисляется 80 XP
               </p>
               <MechanicsSvg02 className="absolute w-[160px] lg:w-[130px] 2xl:w-[210px] left-[60px] phone:left-[170px] sm:left-[70px] lg:left-[140px] -bottom-6 lg:-bottom-10 2xl:left-[110px] 2xl:-bottom-[26px]" />
               <MechanicsSvg02End className="hidden md:block absolute w-[120px] h-[185px] lg:w-[100px] lg:h-[150px] 2xl:w-[130px] 2xl:h-[200px] 3xl:w-[186px] 3xl:h-[281px] right-0 lg:right-0.5 -bottom-[3px] -top-[3px]" />

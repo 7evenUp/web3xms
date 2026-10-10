@@ -1,3 +1,4 @@
+import { useDemoProgressQuery } from "@/redux/api/demo"
 import { Link, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
 
@@ -6,7 +7,7 @@ import TasksDone from "@/assets/svgs/tasks-done.svg?react"
 import Loader from "@/assets/icons/loader.svg?react"
 
 import SoundPlayer from "../SoundPlayer"
-import ZealyDialog from "./ZealyDialog"
+import TaskDialog from "./TaskDialog"
 
 import { cn } from "@/lib/cn"
 
@@ -37,7 +38,7 @@ const JourneyStep = ({
   accentColor,
   maxXp,
   tasks,
-  isDone,
+  isDone: providedIsDone,
   soundSrc,
 }: IJourneyStep & {
   id: number
@@ -46,6 +47,8 @@ const JourneyStep = ({
   soundSrc: string | null
 }) => {
   const { search } = useLocation()
+  const { data: completed } = useDemoProgressQuery()
+  const isDone = providedIsDone || completed?.includes(id)
 
   if (title === null) {
     return <LoadingJourneyView />
@@ -166,7 +169,7 @@ const JourneyStep = ({
                   </div>
                 </Link> */}
 
-                {!isDone && <ZealyDialog accentColor={accentColor} />}
+                {!isDone && <TaskDialog accentColor={accentColor} chapterId={id} />}
               </>
             ) : (
               <p className="text-white/40 font-docker-one text-sm/none 2xl:text-base/none 3xl:text-xl/none tracking-[0.2em]">

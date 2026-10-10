@@ -22,7 +22,7 @@ const PlayerView = ({
   onPlayClick: () => void
 }) => {
   return (
-    <div
+    <button type="button" aria-label={isPlaying ? "Остановить аудио" : "Слушать аудио"}
       className="w-[132px] h-[54px] relative cursor-pointer origin-left scale-[70%] 2xl:scale-[85%] 3xl:scale-100"
       onClick={onPlayClick}
     >
@@ -70,7 +70,7 @@ const PlayerView = ({
       <span className="absolute bottom-0 right-0.5 font-docker-one text-sm/none tracking-[0.2em] text-white">
         слушать
       </span>
-    </div>
+    </button>
   )
 }
 

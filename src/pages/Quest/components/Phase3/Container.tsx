@@ -4,179 +4,103 @@ import { Lock } from "iconoir-react"
 import { motion, useMotionValue, animate } from "framer-motion"
 import * as Dialog from "@radix-ui/react-dialog"
 import { Howl } from "howler"
-
 import LoaderIcon from "@/assets/icons/loader.svg?react"
-
 import OpenClickSound from "@/assets/audio/buttonclickrelease.mp3"
 import ClickWheelSound from "@/assets/audio/click_wheel.mp3"
-
 import { cn } from "@/lib/cn"
-
 import { useOpenContainerMutation } from "@/redux/api/containers"
 import { useRefetchProfileMutation } from "@/redux/api/profile"
-
+import { useAppSelector } from "@/redux/hooks"
 import WinDialog from "./WinDialog"
 import { generateAnimation } from "./generateAnimation"
-
-import { PrizeResponse } from "@/types/containers"
-
+import type { PrizeResponse } from "@/types/containers"
 import styles from "./styles.module.css"
-
 export interface IContainer {
-  id: number
-  imgSrc: string | null
-  xp: number
-  rarity: "common" | "rare" | "legendary"
-  isReady?: boolean
-  prizes: PrizeResponse[]
+  id: number; imgSrc: string | null; xp: number;
+  rarity: "common" | "rare" | "legendary";
+  isReady?: boolean; prizes: PrizeResponse[];
+  isBusy?: boolean; onBusyChange?: (busy: boolean) => void;
 }
-
-const windowWidthHalf = window.innerWidth / 2
-
 const audio = new Audio(ClickWheelSound)
-
-const Container = ({ imgSrc, xp, rarity, isReady, id, prizes }: IContainer) => {
+const Container = ({ imgSrc, xp, rarity, isReady, id, prizes, isBusy, onBusyChange }: IContainer) => {
   const [howl, setHowl] = useState<Howl | null>(null)
-
   const itemPassedRef = useRef(0)
-
   const scrollRef = useRef<HTMLDivElement | null>(null)
-
+  const openingRef = useRef(false)
+  const mountedRef = useRef(true)
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+  const isSoundOn = useAppSelector((state) => state.sound.isPlaying)
+  const soundRef = useRef(isSoundOn)
   const [caseAnimationStarted, setCaseAnimationStarted] = useState(false)
   const [animationOpened, setAnimationOpened] = useState(false)
   const [winOpened, setWinOpened] = useState(false)
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
   const [wonPrizes, setWonPrizes] = useState<JSX.Element | null>(null)
-
   const x = useMotionValue(0)
   const scale = useMotionValue(1)
-
-  const [openContainer, { isLoading, data: winData }] =
-    useOpenContainerMutation()
+  const [openContainer, { isLoading, data: winData }] = useOpenContainerMutation()
   const [refetch] = useRefetchProfileMutation()
-
+  useEffect(() => { soundRef.current = isSoundOn }, [isSoundOn])
   useEffect(() => {
-    if (!animationOpened) {
-      animate(x, 0)
-    }
-  }, [animationOpened])
-
-  useEffect(() => {
-    const newHowl = new Howl({
-      src: OpenClickSound,
-      volume: 0.7,
-    })
-
+    mountedRef.current = true
+    const newHowl = new Howl({ src: OpenClickSound, volume: 0.7 })
     setHowl(newHowl)
-
     return () => {
+      mountedRef.current = false
+      timers.current.forEach(clearTimeout)
       newHowl.unload()
+      x.stop()
+      scale.stop()
     }
-  }, [])
-
+  }, [x, scale])
   useEffect(() => {
+    if (!animationOpened) { x.stop(); x.set(0); return }
     const intervalId = setInterval(() => {
-      if (scrollRef.current) {
-        const scrollRefX = scrollRef.current.getBoundingClientRect().x
-        const totalTranslateX = windowWidthHalf - scrollRefX
-        const itemPassed = Math.floor(totalTranslateX / 282)
-
-        if (itemPassed === itemPassedRef.current) {
-          return
-        } else {
-          audio.play()
-          itemPassedRef.current = itemPassed
-        }
+      if (!scrollRef.current) return
+      const itemPassed = Math.floor((window.innerWidth / 2 - scrollRef.current.getBoundingClientRect().x) / 282)
+      if (itemPassed !== itemPassedRef.current) {
+        if (soundRef.current) void audio.play().catch(() => {})
+        itemPassedRef.current = itemPassed
       }
     }, 16)
-
     return () => clearInterval(intervalId)
-  }, [])
-
+  }, [animationOpened, x])
   const openWinDialog = () => {
-    refetch()
+    timers.current.forEach(clearTimeout)
+    timers.current = []
+    x.stop()
+    audio.pause()
+    void refetch()
     setAnimationOpened(false)
     setWinOpened(true)
   }
-
-  const onOpenClick = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const onOpenClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-
-    // animate(scale, 2, { duration: 0.7, ease: "linear" })
-    // setCaseAnimationStarted(true)
-
-    // setTimeout(() => {
-    //   animate(scale, 1)
-    //   setCaseAnimationStarted(false)
-    //   const randInt = randomInteger(4810, 5020)
-    //   setWonPrizes(generateAnimation(30, prizes[0].prize, prizes))
-    //   setAnimationOpened(true)
-    //   howl?.play()
-    //   animate(x, -randInt, {
-    //     duration: 7,
-    //     ease: "circOut"
-    //   })
-    // }, 700)
-
-    if (isLoading) return
-
+    if (openingRef.current || isLoading || isBusy) return
+    openingRef.current = true
+    onBusyChange?.(true)
     try {
       const winResult = await openContainer({ container_id: id }).unwrap()
+      if (!mountedRef.current) return
+      void refetch()
       animate(scale, 2, { duration: 0.7, ease: "linear" })
       setCaseAnimationStarted(true)
-
-      setTimeout(() => {
+      timers.current.push(setTimeout(() => {
         animate(scale, 1)
         setCaseAnimationStarted(false)
-        const randInt = randomInteger(4810, 5020)
-        // setWonPrizes(generateAnimation(30, prizes[0].prize, prizes))
         setWonPrizes(generateAnimation(30, winResult.prize, prizes))
         setAnimationOpened(true)
-        howl?.play()
-        animate(x, -randInt, {
-          duration: 7,
-          ease: "circOut",
-        })
-      }, 700)
-
-      const timeId = setTimeout(() => {
-        // animate(x, 0)
-        refetch()
-        setAnimationOpened(false)
-        setWinOpened(true)
-      }, 7700)
-
-      setTimeoutId(timeId)
+        if (soundRef.current) howl?.play()
+        animate(x, -randomInteger(4810, 5020), { duration: 7, ease: "circOut" })
+      }, 700))
+      timers.current.push(setTimeout(openWinDialog, 7700))
     } catch (error) {
-      // @ts-expect-error RTKQ-No-Error-Types
-      if (error.data.code === "no_more_claim_links") {
-        toast.warning("Призы закончились")
-      }
-      // @ts-expect-error RTKQ-No-Error-Types
-      else if (error.data.code === "container_not_found") {
-        toast.warning("Контейнер пустой или не существует")
-      }
-      // @ts-expect-error RTKQ-No-Error-Types
-      else if (error.data.code === "zealy_not_linked") {
-        toast.warning("Сперва синхронизируйте аккаунт с Zealy")
-      }
-      // @ts-expect-error RTKQ-No-Error-Types
-      else if (error.data.code === "insufficient_balance") {
-        toast.warning("Недостаточно XP для открытия кейса")
-      }
-      // @ts-expect-error RTKQ-No-Error-Types
-      else if (error.data.detail === "Not authenticated") {
-        toast.warning(
-          "Вы не авторизованны. Перезагрузите страницу или войдите в свой аккаунт"
-        )
-      } else {
-        toast.error("Произошла ошибка. Пожалуйста, попробуйте позже")
-      }
+      openingRef.current = false
+      onBusyChange?.(false)
+      const code = (error as { data?: { code?: string } }).data?.code
+      if (code === "insufficient_balance") toast.warning("Недостаточно XP. Нажми «+400 XP» для бесплатного пополнения.")
+      else toast.error("Не удалось открыть кейс. Попробуй ещё раз.")
     }
   }
-
   if (imgSrc === null) return
 
   return (
@@ -239,11 +163,13 @@ const Container = ({ imgSrc, xp, rarity, isReady, id, prizes }: IContainer) => {
             </span>
           </button>
         ) : (
-          <Dialog.Root open={animationOpened} onOpenChange={setAnimationOpened}>
+          <Dialog.Root open={animationOpened} onOpenChange={(open) => { if (!open && animationOpened) openWinDialog() }}>
             <Dialog.Trigger asChild>
               <button
                 className="relative w-44 h-9 2xl:w-52 2xl:h-11 3xl:w-64 3xl:h-[57px] group flex items-center justify-center cursor-pointer"
                 onClick={onOpenClick}
+                disabled={isBusy || isLoading}
+                aria-label={"Купить и открыть кейс " + rarity + " за " + xp + " XP"}
               >
                 <svg
                   width="260"
@@ -274,7 +200,7 @@ const Container = ({ imgSrc, xp, rarity, isReady, id, prizes }: IContainer) => {
             </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed z-[100] inset-0 backdrop-blur-md" />
-              <Dialog.Content className="data-[state=open]:animate-contentShow fixed z-[101] top-[50%] left-[50%] max-h-[85vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] rounded-md p-6 focus:outline-none flex flex-col items-center gap-6">
+              <Dialog.Content aria-describedby={undefined} className="data-[state=open]:animate-contentShow fixed z-[101] top-[50%] left-[50%] max-h-[85vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] rounded-md p-6 focus:outline-none flex flex-col items-center gap-6">
                 <div className="w-full flex justify-center items-center">
                   <Dialog.Title
                     className={cn(
@@ -301,12 +227,7 @@ const Container = ({ imgSrc, xp, rarity, isReady, id, prizes }: IContainer) => {
                 </div>
                 <Dialog.Close
                   className="text-white font-docker-one hover:underline underline-offset-4"
-                  onClick={() => {
-                    openWinDialog()
-                    if (timeoutId !== null) {
-                      clearTimeout(timeoutId)
-                    }
-                  }}
+                  onClick={openWinDialog}
                 >
                   Пропустить
                 </Dialog.Close>
@@ -316,21 +237,7 @@ const Container = ({ imgSrc, xp, rarity, isReady, id, prizes }: IContainer) => {
         )}
       </div>
 
-      {/* <WinDialog
-        open={winOpened}
-        onOpenChange={setWinOpened}
-        data={{
-          link: "123",
-          // @ts-expect-error no-more-data-needed
-          prize: {
-            image: prizes[0].prize.image,
-            title: prizes[0].prize.title,
-            description: prizes[0].prize.description,
-            rarity: prizes[0].prize.rarity,
-          },
-        }}
-      /> */}
-      <WinDialog open={winOpened} onOpenChange={setWinOpened} data={winData} />
+      <WinDialog open={winOpened} onOpenChange={(open) => { setWinOpened(open); if (!open) { openingRef.current = false; onBusyChange?.(false) } }} data={winData} />
     </>
   )
 }

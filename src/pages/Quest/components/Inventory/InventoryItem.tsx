@@ -1,12 +1,11 @@
 import { useState } from "react"
-import { toast } from "sonner"
+
 
 import { cn } from "@/lib/cn"
 
 import InfoDialog from "./InfoDialog"
-// import TonDialog from "./TonDialog"
 
-import { useProfileQuery } from "@/redux/api/profile"
+
 
 import ClaimDialog from "./ClaimDialog"
 
@@ -40,21 +39,9 @@ const InventoryItem = ({
   instruction: string | null
   className?: string
 }) => {
-  // const [tonDialogOpen, setTonDialogOpen] = useState(false)
   const [claimDialogOpen, setClaimDialogOpen] = useState(false)
 
-  const { data: profileData } = useProfileQuery()
-
-  const onClaimClick = async () => {
-    if (profileData?.tonAddress === null) {
-      // setTonDialogOpen(true)
-      toast.warning(
-        "Для активации NFT Вам необходимо привязать TON кошелёк на https://id.crypton.xyz"
-      )
-    } else {
-      setClaimDialogOpen(true)
-    }
-  }
+  const onClaimClick = () => setClaimDialogOpen(true)
 
   return (
     <>
@@ -185,16 +172,13 @@ const InventoryItem = ({
               </button>
             ) : (
               type === "sponsor_promo_code" && (
-                <p className="font-circe-regular h-10 text-base/none tracking-[0.02em] text-white text-center">
-                  {userData && userData}
-                </p>
-              )
+                  <button onClick={onClaimClick} className="font-docker-one text-xs border border-white text-white hover:bg-white/20 p-3 mt-3">Активировать</button>
+                )
             )}
           </>
         )}
       </div>
 
-      {/* <TonDialog open={tonDialogOpen} onOpenChange={setTonDialogOpen} /> */}
       <ClaimDialog
         open={claimDialogOpen}
         onOpenChange={setClaimDialogOpen}
