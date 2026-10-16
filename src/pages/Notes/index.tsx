@@ -198,10 +198,9 @@ const Notes = () => {
 
         <article
           className="w-[90vw] lg:w-[930px] bg-black px-2 small-phone:px-3 py-4 phone:p-6 md:p-10 text-white/80 whitespace-pre-wrap font-circe-regular text-sm/[160%] phone:text-base/[160%] md:text-lg/[160%] tracking-[0.01em]"
-          dangerouslySetInnerHTML={{
-            __html: currentChapter.stories[parseInt(episode) - 1].text,
-          }}
-        />
+        >
+          {currentChapter.stories[parseInt(episode) - 1].text}
+        </article>
 
         <div className="w-[90vw] lg:w-[930px] mt-10 md:mt-16 flex justify-between items-start small-phone:items-center gap-3 small-phone:gap-0 flex-col small-phone:flex-row">
           <button

@@ -48,7 +48,7 @@ const JourneyStep = ({
 }) => {
   const { search } = useLocation()
   const { data: completed } = useDemoProgressQuery()
-  const isDone = providedIsDone || completed?.includes(id)
+  const isDone = tasks > 0 && (providedIsDone || completed?.includes(id))
 
   if (title === null) {
     return <LoadingJourneyView />
@@ -169,7 +169,7 @@ const JourneyStep = ({
                   </div>
                 </Link> */}
 
-                {!isDone && <TaskDialog accentColor={accentColor} chapterId={id} />}
+                {!isDone && tasks > 0 && <TaskDialog accentColor={accentColor} chapterId={id} />}
               </>
             ) : (
               <p className="text-white/40 font-docker-one text-sm/none 2xl:text-base/none 3xl:text-xl/none tracking-[0.2em]">

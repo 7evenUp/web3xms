@@ -74,7 +74,7 @@ const Mechanics = () => {
                 Все главы открыты
               </h2>
               <p className="font-circe-bold text-base/none 2xl:text-xl/none 3xl:text-2xl/[90%] tracking-[0.02em] max-w-[250px] 2xl:max-w-[360px] text-gray">
-                в разделе «Квест» доступны восемь демо-историй с иллюстрациями и заданиями
+                в разделе «Квест» доступны рождественские истории с иллюстрациями и аудиозаписями
               </p>
             </div>
             <div className="relative z-10 w-full sm:w-[320px] md:w-[390px] 2xl:w-[540px] 3xl:w-[663px] sm:-ml-[50px] bg-red flex pt-8 2xl:pt-[43px] pb-[90px] lg:pb-0 pl-2 phone:pl-4 sm:pl-8 2xl:pl-[40px] 3xl:pl-[65px] clip-path-02 mb-4 lg:mb-0">

@@ -30,6 +30,7 @@ export function handleDemoRequest(endpoint: string, args: string | FetchArgs) {
       const id = Number(body.chapterId)
       const chapter = demoJourney.find((item) => item.id === id && item.order > 0)
       if (!chapter) return fail("chapter_not_found", 404)
+      if (chapter.tasksCount === 0) return fail("chapter_has_no_tasks", 400)
       if (!state.completedChapters.includes(id)) {
         state.completedChapters.push(id)
         state.profile.expBalance += chapter.maxExpReward

@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { Howl } from "howler"
 import { Pause, Play, Xmark } from "iconoir-react"
 
-import DemoNotice from "@/components/DemoNotice"
 import Header from "@/components/Header"
 import ScrollToTop from "@/components/ScrollToTop"
 import { useSoundContext } from "@/components/SoundProvider"
@@ -37,7 +36,6 @@ const Root = () => {
   return (
     <ScrollToTop>
       <Header />
-      <DemoNotice />
       <main className="w-full flex flex-col justify-center">
         <Outlet />
 

@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
-import { isAfter, format } from "date-fns"
 
 import GirlImage from "@/assets/images/phase-2-girl.png"
 
@@ -18,7 +17,6 @@ import Tabs from "../Tabs"
 
 import SoundPlayer from "./SoundPlayer"
 import JourneyStep from "./JourneyStep"
-import TaskDialog from "./JourneyStep/TaskDialog"
 
 import { cn } from "@/lib/cn"
 import FormDialog from "../Inventory/FormDialog"
@@ -127,7 +125,6 @@ const Phase2 = () => {
                       </div>
                     </Link> */}
 
-                    <TaskDialog />
                   </div>
                 </motion.div>
                 <motion.div
@@ -142,7 +139,7 @@ const Phase2 = () => {
                     Привееет, <br /> искатель приключений!
                   </h2>
                   <p className="text-yellow/70 font-circe-bold text-xs/[125%] phone:text-sm/[125%] 2xl:text-base/[125%] 3xl:text-xl/[125%] tracking-[0.02em] w-[210px] phone:w-[250px] sm:w-[330px] md:w-[450px] 2xl:w-[510px] 3xl:w-[640px] mt-5">
-                    Все восемь глав доступны сразу. Читай демо-истории, выполняй задания, получай XP и открывай кейсы с виртуальными подарками!
+                    Все восемь глав доступны сразу. Читай истории, выполняй задания, получай XP и открывай кейсы с виртуальными подарками!
                   </p>
                   <img
                     src={GirlImage}
@@ -182,9 +179,7 @@ const Phase2 = () => {
                     maxXp={el.maxExpReward}
                     tasks={el.tasksCount}
                     src={photos.length > 0 ? photos[0].mediaContent.file : null}
-                    isActive={isAfter(new Date(), new Date(el.startDatetime))}
-                    revealDay={format(new Date(el.startDatetime), "dd.MM")}
-                    revealTime={format(new Date(el.startDatetime), "HH:mm")}
+                    isActive={true}
                     soundSrc={
                       audio.length > 0 ? audio[0].mediaContent.file : null
                     }

@@ -11,7 +11,7 @@ import chapter5 from "@/assets/images/phase-2-5.png"
 import chapter6 from "@/assets/images/phase-2-6.png"
 import chapter7 from "@/assets/images/phase-2-7.png"
 import chapter8 from "@/assets/images/phase-2-8.png"
-import soundtrack from "@/assets/audio/new-year.mp3"
+import { originalStories, getOriginalEpisodes, unreleasedStory } from "./stories"
 import tangem from "@/assets/logos/tangem-logo.png"
 import memefi from "@/assets/logos/memefi-logo.png"
 import symbiosis from "@/assets/logos/symbiosis-logo.png"
@@ -52,34 +52,32 @@ export const demoContainers: ContainersResponse = {
   })),
 }
 
-const chapters = [
-  ["Сигнал из космоса", "Отправляйся в рождественское путешествие и найди источник таинственного сигнала.", chapter1, "red"],
-  ["Планета подарков", "Исследуй новый мир, в котором рождественские подарки обретают особую силу.", chapter2, "green"],
-  ["Хранители знаний", "Узнай, как герои сохраняют знания и делятся ими со всей галактикой.", chapter3, "violet"],
-  ["Цифровой океан", "Помоги команде проложить путь через бескрайний цифровой океан.", chapter4, "cyan"],
-  ["Золотой ключ", "Найди ключ, который откроет дорогу к волшебной сокровищнице.", chapter5, "gold"],
-  ["Ледяная орбита", "Разгадай загадку ледяной станции и продолжи путешествие.", chapter6, "blue"],
-  ["Мастерская чудес", "Собери команду и восстанови мастерскую рождественских чудес.", chapter7, "purple"],
-  ["Рождественская звезда", "Зажги рождественскую звезду и открой кейсы с подарками.", chapter8, "burgundy"],
+const chapterImages = [chapter1, chapter1, chapter2, chapter3, chapter4, chapter5, chapter6, chapter7, chapter8]
+const chapterColors = ["", "red", "green", "violet", "cyan", "gold", "blue", "purple", "burgundy"]
+const chapterDescriptions = [
+  "Страшные и Удивительные Рождественские Истории — спецвыпуск Crypto Vision. По вселенным One Word и Crypton Universe. By Crypton & Crypto Wiki.",
+  "Громозека и его команда отправляются к зеркальному астероиду, который угрожает Великому Рождественскому Сиянию.",
+  "Будущий префект Феликс Морозов принимает неожиданную делегацию Хранителей Времени на борту своего крейсера.",
+  "Капитан Зелёный и экипаж «Пегаса» получают сигнал бедствия с планеты Шелесяка.",
+  "Выпускное задание Ани Селезнёвой превращается в испытание смелости, дружбы и доброты на планете Фуриосса.",
+  "Братья Фусигуро расследуют крушение фрахтовика «Диметра» и исчезновение его ценного груза.",
+  "Детектив Дилл Дроп ищет следы похищенного фотонного преобразователя на станции «Райская Гавань».",
+  unreleasedStory.description,
+  "Возвращение на борт Галаксеона и заключительное слово автора.",
 ]
-// Original server-owned story text is unavailable; these are demo chapters.
-export const demoJourney: JourneyStep[] = chapters.map(([title, description, file, backgroundColor], index) => ({
-  id: index + 1, order: index + 1, title, description, backgroundColor,
-  startDatetime: DEMO_DATE, taskLink: null, tasksCount: 1, maxExpReward: 80,
+
+export const demoJourney: JourneyStep[] = originalStories.map(({ title, audio }, order) => ({
+  id: order, order, title, description: chapterDescriptions[order],
+  backgroundColor: chapterColors[order],
+  startDatetime: DEMO_DATE, taskLink: null,
+  tasksCount: order === 0 || order === 7 ? 0 : 1,
+  maxExpReward: order === 0 || order === 7 ? 0 : 80,
   mediaContents: [
-    { id: index * 2 + 1, order: 1, mediaContent: { id: index * 2 + 1, file, type: "image" } },
-    { id: index * 2 + 2, order: 2, mediaContent: { id: index * 2 + 2, file: soundtrack, type: "audio" } },
+    { id: order * 2 + 1, order: 1, mediaContent: { id: order * 2 + 1, file: chapterImages[order], type: "image" } },
+    ...(audio ? [{ id: order * 2 + 2, order: 2, mediaContent: { id: order * 2 + 2, file: "/audio/stories/" + audio, type: "audio" } }] : []),
   ],
-  stories: [
-    { title, text: `${description}\n\nЭто демонстрационная история для портфолио. На борту корабля загорается новый сигнал: героям предстоит исследовать незнакомую локацию, помочь её обитателям и найти следующую часть рождественской звезды.\n\nПрочитай продолжение, затем вернись к заданиям и проверь свои знания.`, orderNumber: 1,
-      additionalInfo: [{ title: "Локация", text: `Рождественская галактика, сектор ${index + 1}` }, { title: "Миссия", text: title }] },
-    { title: "Продолжение путешествия", text: "Команда объединяет усилия и восстанавливает часть звезды. Путь к следующей планете открыт!\n\nВ демо все главы доступны сразу. Выполни задание этой главы, получи 80 XP и потрать их на кейсы. Полученные награды будут ждать тебя в инвентаре.", orderNumber: 2, additionalInfo: [] },
-  ],
+  stories: getOriginalEpisodes(order),
 }))
-demoJourney.unshift({
-  ...demoJourney[0], id: 0, order: 0, title: "Рождественское путешествие",
-  description: "Восемь глав, задания и подарки. В демо все главы открыты сразу — выбирай любую!",
-  tasksCount: 0, maxExpReward: 0, stories: [{ ...demoJourney[0].stories[0], title: "Предисловие" }],
-})
+
 export const demoSponsors: Sponsors[] = [tangem, memefi, symbiosis, crossfi]
   .map((logo, index) => ({ id: index + 1, logo, link: "/about" }))

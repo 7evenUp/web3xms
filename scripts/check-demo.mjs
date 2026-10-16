@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtemp, readdir, rm } from "node:fs/promises"
+import { mkdtemp, readdir, rm, stat } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
@@ -34,6 +34,12 @@ try {
   const profile = () => result("profile")
   const inventory = () => result("inventory")
   const open = (id) => result("openContainer", { url: `api/containers/${id}/open`, method: "POST" })
+  check("All chapters are available immediately without waiting", () => {
+    const chapters = result("journeySteps").filter((chapter) => chapter.order > 0)
+    assert.equal(chapters.length, 8)
+    assert.ok(chapters.every((chapter) => Date.parse(chapter.startDatetime) <= Date.now()))
+    assert.deepEqual(result("journeySteps").filter((chapter) => chapter.order > 0), chapters)
+  })
   check("Guest profile, starter XP and all three case types", () => {
     assert.equal(profile().expBalance, 1000)
     assert.equal(result("getContainers").containers.length, 3)
@@ -80,17 +86,42 @@ try {
       assert.equal(inventory().items.find((entry) => entry.id === id).is_used, true)
     }
   })
-  check("Each of the eight chapters awards XP once", () => {
+  check("Published chapters award XP once; the unreleased story has no task", () => {
     const before = profile().expBalance
     for (let id = 1; id <= 8; id++) {
+      if (id === 7) continue
       const args = { url: "demo/complete-chapter", body: { chapterId: id } }
       result("completeChapter", args)
       result("completeChapter", args)
     }
-    assert.equal(profile().expBalance, before + 640)
-    assert.equal(result("demoProgress").length, 8)
+    assert.equal(profile().expBalance, before + 560)
+    assert.equal(result("demoProgress").length, 7)
     assert.equal(result("journeySteps").filter((chapter) => chapter.order > 0).length, 8)
   })
+  check("The anthology preserves episode counts, settings and the unpublished seventh story", () => {
+    const chapters = result("journeySteps")
+    assert.deepEqual(chapters.map((chapter) => chapter.stories.length), [2, 3, 4, 5, 8, 5, 4, 1, 2])
+    assert.equal(chapters[5].title, "Криптовалютные реликты")
+    assert.equal(chapters[8].title, "Эпилог")
+    for (const chapter of chapters) {
+      assert.deepEqual(chapter.stories.map((story) => story.orderNumber), chapter.stories.map((_, index) => index + 1))
+      assert.ok(chapter.stories.every((story) => story.text.length > 100))
+      const audio = chapter.mediaContents.filter((media) => media.mediaContent.type === "audio")
+      assert.deepEqual(audio.map((media) => media.mediaContent.file), chapter.id === 7 ? [] : [
+        `/audio/stories/${chapter.id === 0 ? "prologue" : chapter.id === 8 ? "epilogue" : `story-${chapter.id}`}.mp3`,
+      ])
+    }
+    assert.match(chapters[7].description, /не была выпущена/)
+    assert.match(chapters[7].stories[0].text, /Ксандр/)
+    assert.match(chapters[7].stories[0].text, /Локки/)
+    assert.equal(chapters[7].maxExpReward, 0)
+    assert.equal(request("completeChapter", { url: "demo", body: { chapterId: 7 } }).error.data.code, "chapter_has_no_tasks")
+  })
+  for (const chapter of result("journeySteps")) {
+    for (const media of chapter.mediaContents.filter((media) => media.mediaContent.type === "audio")) {
+      assert.ok((await stat(path.join("public", media.mediaContent.file))).size > 1_000_000)
+    }
+  }
   check("Restoring a detail adds an NFT only once per identifier", () => {
     const before = inventory().items_count
     const args = { url: "api/get-nutcracker-with-attributes?transaction_hash=demo-part-1" }
@@ -105,7 +136,7 @@ try {
   check("Reload restores balance, rewards, activation and completed chapters", () => {
     assert.deepEqual(profile(), savedProfile)
     assert.deepEqual(inventory(), savedInventory)
-    assert.equal(result("demoProgress").length, 8)
+    assert.equal(result("demoProgress").length, 7)
   })
   check("Reset restores the complete initial demo", () => {
     result("resetDemo")
@@ -120,6 +151,10 @@ try {
     assert.equal(request("completeChapter", { url: "demo", body: { chapterId: 999 } }).error.status, 404)
     assert.equal(request("unknown", "unknown").error.status, 404)
     assert.equal(profile().expBalance, 1000)
+  })
+  ;({ handleDemoRequest: request } = await reload())
+  check("Reload keeps every chapter open", () => {
+    assert.ok(result("journeySteps").filter((chapter) => chapter.order > 0).every((chapter) => Date.parse(chapter.startDatetime) <= Date.now()))
   })
   storage.set("web3xms-demo-v1", "{broken json")
   ;({ handleDemoRequest: request } = await reload())
