@@ -1,6 +1,6 @@
 import PlayIcon from "@/assets/icons/play-icon.svg?react"
 
-import SoundVisualizer from './SoundVisualizer'
+import SoundVisualizer from "./SoundVisualizer"
 
 import { cn } from "@/lib/cn"
 
@@ -14,7 +14,7 @@ const PlayerView = ({
   accentColor,
   isPlaying,
   remainingTime,
-  onPlayClick
+  onPlayClick,
 }: {
   accentColor: string | undefined
   isPlaying: boolean
@@ -22,7 +22,9 @@ const PlayerView = ({
   onPlayClick: () => void
 }) => {
   return (
-    <button type="button" aria-label={isPlaying ? "Остановить аудио" : "Слушать аудио"}
+    <button
+      type="button"
+      aria-label={isPlaying ? "Пауза аудио" : "Слушать аудио"}
       className="w-[132px] h-[54px] relative cursor-pointer origin-left scale-[70%] 2xl:scale-[85%] 3xl:scale-100"
       onClick={onPlayClick}
     >
@@ -38,17 +40,17 @@ const PlayerView = ({
           accentColor === "gold" && "bg-[#99790D]",
           accentColor === "blue" && "bg-[#046BB3]",
           accentColor === "purple" && "bg-[#B766E5]",
-          accentColor === "burgundy" && "bg-[#9E3233]"
+          accentColor === "burgundy" && "bg-[#9E3233]",
         )}
       />
-      {/* {isPlaying ? (
+      {isPlaying ? (
         <div className="absolute z-20 left-[18px] top-4 flex gap-1 -rotate-[5deg]">
           <div className="h-3 w-0.5 bg-white" />
           <div className="h-3 w-0.5 bg-white" />
         </div>
-      ) : ( */}
+      ) : (
         <PlayIcon className="absolute left-[18px] top-4 text-white" />
-      {/* )} */}
+      )}
 
       <SoundVisualizer accentColor={accentColor} isPlaying={isPlaying} />
 
@@ -62,13 +64,13 @@ const PlayerView = ({
           accentColor === "gold" && "text-[#99790D]",
           accentColor === "blue" && "text-[#046BB3]",
           accentColor === "purple" && "text-[#B766E5]",
-          accentColor === "burgundy" && "text-[#9E3233]"
+          accentColor === "burgundy" && "text-[#9E3233]",
         )}
       >
         {getMinutes(remainingTime)}:{getSeconds(remainingTime)}
       </span>
       <span className="absolute bottom-0 right-0.5 font-docker-one text-sm/none tracking-[0.2em] text-white">
-        слушать
+        {isPlaying ? "пауза" : "слушать"}
       </span>
     </button>
   )

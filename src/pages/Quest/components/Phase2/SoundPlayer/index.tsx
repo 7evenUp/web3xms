@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react"
 import { Howl } from "howler"
-
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { soundOff } from "@/redux/sound/slice"
-
 import LoadingView from "./LoadingView"
 import PlayerView from "./PlayerView"
-
 import { useSoundContext } from "@/components/SoundProvider"
 
 const SoundPlayer = ({
@@ -16,66 +13,47 @@ const SoundPlayer = ({
   accentColor?: string
   soundSrc: string
 }) => {
-  const { setSoundSrc, soundSrc: contextSoundSrc } = useSoundContext()
-
-  const [remainingTime, setRemainingTime] = useState<null | number>(null)
-  const [duration, setDuration] = useState<number | null>(null)
-  const [howl, setHowl] = useState<Howl | null>(null)
+  const {
+    setSoundSrc,
+    soundSrc: contextSoundSrc,
+    isPlaying,
+    toggle,
+  } = useSoundContext()
+  const [duration, setDuration] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-
   const bgMusicIsPlaying = useAppSelector((state) => state.sound.isPlaying)
-  const dispath = useAppDispatch()
-
-  const handleLoad = function () {
-    if (typeof onload === "function") {
-      // @ts-expect-error asdasd
-      onload.call(this)
-    }
-    // @ts-expect-error asdasd
-    setDuration(this.duration())
-    setIsLoading(false)
-  }
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const newHowl = new Howl({
+    setIsLoading(true)
+    setDuration(0)
+    const audio = new Howl({
       src: soundSrc,
       html5: true,
-      volume: 0.7,
       preload: "metadata",
-      onload: handleLoad,
+      onload: () => {
+        setDuration(audio.duration())
+        setIsLoading(false)
+      },
+      onloaderror: () => setIsLoading(false),
     })
-
-    setHowl(newHowl)
-
     return () => {
-      newHowl.unload()
+      audio.unload()
     }
   }, [soundSrc])
 
   const onToggle = () => {
-    if (bgMusicIsPlaying) {
-      setTimeout(() => {
-        dispath(soundOff())
-      }, 100)
-    }
-    setSoundSrc(contextSoundSrc === soundSrc ? "" : soundSrc)
+    if (bgMusicIsPlaying) dispatch(soundOff())
+    if (contextSoundSrc === soundSrc) toggle()
+    else setSoundSrc(soundSrc)
   }
 
-  useEffect(() => {
-    if (duration !== null) {
-      setRemainingTime(Math.floor(duration))
-    }
-  }, [duration])
-
   if (isLoading) return <LoadingView accentColor={accentColor} />
-
-  if (howl === null || remainingTime === null) return null
-
   return (
     <PlayerView
-      remainingTime={remainingTime}
+      remainingTime={Math.floor(duration)}
       accentColor={accentColor}
-      isPlaying={contextSoundSrc === soundSrc}
+      isPlaying={contextSoundSrc === soundSrc && isPlaying}
       onPlayClick={onToggle}
     />
   )
