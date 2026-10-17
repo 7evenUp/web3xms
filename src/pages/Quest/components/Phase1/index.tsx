@@ -11,25 +11,50 @@ import ButtonBorder from "@/assets/svgs/phase-1-btn-border.svg?react"
 import { useMediaQuery } from "@/hooks/useMedia"
 import Profile from "@/components/Profile"
 import Tabs from "../Tabs"
-import FormDialog from "../Inventory/FormDialog"
 import SoundPlayer from "../Phase2/SoundPlayer"
 import soundtrack from "@/assets/audio/new-year.mp3"
 import "./styles.css"
 const Phase1 = () => (
   <section className="bg-black p-2.5 2xl:p-[15px] overflow-hidden">
     <div className="relative bg-black min-h-[calc(100vh-20px)] 2xl:min-h-[calc(100vh-30px)] flex flex-col quest-space-bg pb-96 sm:pb-80 lg:pb-24">
-      <Tabs /><Profile /><FormDialog />
-      <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 flex flex-col items-center mt-[285px] lg:mt-52 2xl:mt-60 px-4">
-        <h1 className="font-paperfiller text-5xl phone:text-7xl 2xl:text-8xl text-yellow text-center">Рождественское путешествие</h1>
-        <p className="font-circe-bold text-white text-center max-w-lg my-6">Добро пожаловать в демо WEB3 X-MAS! Читай истории, выполняй задания, покупай кейсы за XP и открывай подарки. На старте у тебя 1000 XP, а пополнить баланс можно бесплатно.</p>
+      <Tabs />
+      <Profile />
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 flex flex-col items-center mt-[285px] lg:mt-52 2xl:mt-60 px-4"
+      >
+        <h1 className="font-paperfiller text-5xl phone:text-7xl 2xl:text-8xl text-yellow text-center">
+          Рождественское путешествие
+        </h1>
+        <p className="font-circe-bold text-white text-center max-w-lg my-6">
+          Добро пожаловать в демо WEB3 X-MAS! Читай истории, выполняй задания,
+          покупай кейсы за XP и открывай подарки. На старте у тебя 1000 XP, а
+          пополнить баланс можно бесплатно.
+        </p>
         <SoundPlayer accentColor="red" soundSrc={soundtrack} />
-        <Link to="/quest/phase-2" className="group relative w-[260px] small-phone:w-[380px] h-[48px] text-white hover:text-black flex justify-center items-center mt-6">
+        <Link
+          to="/quest/phase-2"
+          className="group relative w-[260px] small-phone:w-[380px] h-[48px] text-white hover:text-black flex justify-center items-center mt-6"
+        >
           <ButtonBorder className="w-full h-full absolute inset-0 stroke-yellow group-hover:fill-yellow" />
-          <span className="relative z-10 font-docker-one text-xs tracking-[0.2em]">Начать квест</span>
+          <span className="relative z-10 font-docker-one text-xs tracking-[0.2em]">
+            Начать квест
+          </span>
         </Link>
-        <Link to="/quest/phase-3" className="font-circe-bold text-white underline underline-offset-4 mt-5">Сразу открыть кейсы</Link>
+        <Link
+          to="/quest/phase-3"
+          className="font-circe-bold text-white underline underline-offset-4 mt-5"
+        >
+          Сразу открыть кейсы
+        </Link>
       </motion.div>
-      <motion.img initial={{ opacity: 0 }} animate={{ opacity: 1 }} src={PlanetImage} className="w-[530px] bottom-8 small-phone:-bottom-4 sm:w-[61.52vw] lg:w-[34.375vw] absolute left-0 sm:bottom-0" />
+      <motion.img
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        src={PlanetImage}
+        className="w-[530px] bottom-8 small-phone:-bottom-4 sm:w-[61.52vw] lg:w-[34.375vw] absolute left-0 sm:bottom-0"
+      />
       <Stars />
     </div>
   </section>
@@ -49,64 +74,64 @@ const Stars = () => {
   const BigTranslateX = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [-10, 10]
+    [-10, 10],
   )
   const BigTranslateY = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [-10, 10]
+    [-10, 10],
   )
 
   const MdTranslateX1 = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [20, -20]
+    [20, -20],
   )
   const MdTranslateY1 = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [20, -20]
+    [20, -20],
   )
   const MdTranslateX2 = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [-20, 20]
+    [-20, 20],
   )
   const MdTranslateY2 = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [-20, 20]
+    [-20, 20],
   )
 
   const SmTranslateX1 = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [10, -10]
+    [10, -10],
   )
   const SmTranslateY1 = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [30, -30]
+    [30, -30],
   )
   const SmTranslateX2 = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [20, -20]
+    [20, -20],
   )
   const SmTranslateY2 = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [40, -40]
+    [40, -40],
   )
   const SmTranslateX3 = useTransform(
     springX,
     [-halfWindowX, halfWindowX],
-    [40, -40]
+    [40, -40],
   )
   const SmTranslateY3 = useTransform(
     springY,
     [-halfWindowY, halfWindowY],
-    [20, -20]
+    [20, -20],
   )
 
   useEffect(() => {

@@ -17,12 +17,11 @@ import { useProfileQuery } from "@/redux/api/profile"
 import { useGetContainersQuery } from "@/redux/api/containers"
 
 import { cn } from "@/lib/cn"
-import FormDialog from "../Inventory/FormDialog"
 
 
 const NewPhase3 = () => {
   const [isOpening, setIsOpening] = useState(false)
-  const { data: profileData, isSuccess: isProfileSuccess } = useProfileQuery()
+  const { data: profileData } = useProfileQuery()
   const { data: containersData, isError, isSuccess } = useGetContainersQuery()
   const [refill, { isLoading: isRefilling }] = useRefillMutation()
 
@@ -47,8 +46,6 @@ const NewPhase3 = () => {
       <div className="relative bg-black min-h-[calc(100vh-20px)] 2xl:min-h-[calc(100vh-30px)] flex flex-col items-center quest-space-bg bg-[auto_500px] sm:bg-contain 3xl:bg-auto extra:bg-contain pb-36">
         <Tabs />
         <Profile />
-
-        {isProfileSuccess && <FormDialog />}
 
         {!containersData && null}
 

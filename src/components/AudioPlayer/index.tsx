@@ -38,15 +38,17 @@ const RewindIcon = ({ forward = false }: { forward?: boolean }) => (
       stroke="currentColor"
       strokeWidth="1.5"
       aria-hidden="true"
-      style={forward ? { transform: "scaleX(-1)" } : undefined}
     >
-      <path
-        d="M7 7a10 10 0 1 1-2.5 10M7 2v5H2"
+      <g
+        transform={forward ? "translate(28 0) scale(-1 1)" : undefined}
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
+      >
+        <path d="M14 4a10 10 0 1 1-10 10" />
+        <path d="m17 1-3 3 3 3" />
+      </g>
+      <text x="14" y="15" textAnchor="middle" dominantBaseline="central" fill="currentColor" stroke="none">15</text>
     </svg>
-    <span>15</span>
   </span>
 )
 const VolumeIcon = ({ muted }: { muted: boolean }) => (

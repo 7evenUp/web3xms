@@ -290,10 +290,9 @@
   width: 28px;
   height: 28px;
 }
-.audio-player__rewind > span {
+.audio-player__rewind text {
   font-family: "Circe Bold", sans-serif;
-  font-size: 10px;
-  padding-top: 2px;
+  font-size: 9px;
 }
 .audio-player__footer {
   display: flex;

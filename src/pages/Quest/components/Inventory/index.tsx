@@ -5,16 +5,13 @@ import ButtonBorder from "@/assets/svgs/inventory-btn-border.svg?react"
 import Profile from "@/components/Profile"
 
 import InventoryItem from "./InventoryItem"
-import FormDialog from "./FormDialog"
 
 import { useInventoryQuery } from "@/redux/api/inventory"
-import { useProfileQuery } from "@/redux/api/profile"
 
 import { cn } from "@/lib/cn"
 
 const Inventory = () => {
   const { data } = useInventoryQuery()
-  const { isSuccess: isProfileSuccess } = useProfileQuery()
 
   if (!data) return <BlankPage isLoading />
 
@@ -27,8 +24,6 @@ const Inventory = () => {
       <div className="relative bg-black min-h-[calc(100vh-20px)] 2xl:min-h-[calc(100vh-30px)] flex flex-col items-center quest-space-bg extra:bg-cover pb-6 xl:pb-8 2xl:pb-10 3xl:pb-12">
         <Profile />
         <Heading />
-
-        {isProfileSuccess && <FormDialog />}
 
         <div className="flex justify-center flex-wrap gap-5 w-[80vw] small-phone:w-[70vw] phone:w-[80vw] 2xl:w-[1330px] mt-6 mb-16">
           {data.items.map((prize) => (
@@ -56,7 +51,6 @@ const Inventory = () => {
 export default Inventory
 
 const BlankPage = ({ isLoading = false }: { isLoading?: boolean }) => {
-  const { isSuccess: isProfileSuccess } = useProfileQuery()
   
   return (
     <section className="bg-black p-2.5 2xl:p-[15px] overflow-hidden">
@@ -64,8 +58,6 @@ const BlankPage = ({ isLoading = false }: { isLoading?: boolean }) => {
         <Profile />
 
         <Heading />
-
-        {isProfileSuccess && <FormDialog />}
 
         <div className="flex flex-col gap-1 xl:gap-2 2xl:gap-3 3xl:gap-4 mt-8 sm:mt-10 xl:mt-12 2xl:mt-14 3xl:mt-16">
           <h2 className="font-circe-bold text-xl/none sm:text-2xl/none 2xl:text-3xl/none 3xl:text-4xl/none tracking-[0.02em] text-white/80 text-center">

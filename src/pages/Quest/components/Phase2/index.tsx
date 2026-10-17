@@ -19,8 +19,6 @@ import SoundPlayer from "./SoundPlayer"
 import JourneyStep from "./JourneyStep"
 
 import { cn } from "@/lib/cn"
-import FormDialog from "../Inventory/FormDialog"
-import { useProfileQuery } from "@/redux/api/profile"
 
 const Phase2 = () => {
   const { search } = useLocation()
@@ -33,7 +31,6 @@ const Phase2 = () => {
     isLoading,
     isError,
   } = useJourneyStepsQuery()
-  const { isSuccess: isProfileSuccess } = useProfileQuery()
 
   const introStep = journeySteps?.find((el) => el.order === 0)
 
@@ -71,8 +68,6 @@ const Phase2 = () => {
       >
         <Tabs />
         <Profile />
-
-        {isProfileSuccess && <FormDialog />}
 
         {isLoading && null}
 
